@@ -1,5 +1,7 @@
 package cn.dengbin97.wx.service.impl;
 
+import cn.dengbin97.wx.message.Article;
+import cn.dengbin97.wx.message.NewsMessage;
 import cn.dengbin97.wx.message.TextMessage;
 import cn.dengbin97.wx.service.MessageService;
 import cn.dengbin97.wx.utils.MessageUtil;
@@ -7,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,14 +51,25 @@ public class MessageServiceImpl implements MessageService {
                 /*if(content.equals("xxx")){
 
                 }*/
-                //自动回复
-                TextMessage text = new TextMessage();
-                text.setContent("reply:"+content);
-                text.setToUserName(fromUserName);
-                text.setFromUserName(toUserName);
-                text.setCreateTime(System.currentTimeMillis());
-                text.setMsgType(msgType);
-                respMessage = MessageUtil.textMessageToXml(text);
+//                //自动回复
+//                TextMessage text = new TextMessage();
+//                text.setContent("reply:"+content);
+//                text.setToUserName(fromUserName);
+//                text.setFromUserName(toUserName);
+//                text.setCreateTime(System.currentTimeMillis());
+//                text.setMsgType(msgType);
+//                respMessage = MessageUtil.textMessageToXml(text);
+                NewsMessage newsMessage = new NewsMessage();
+                Article article = new Article();
+                article.setDescription("这是描述" + content);
+                article.setTitle("这是标题");
+                article.setUrl("http://www.baidu.com");
+                article.setPicUrl("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548083368508&di=02b2f4dfe089d2fd6c41cbcc9b1600c3&imgtype=0&src=http%3A%2F%2Fimg.bimg.126.net%2Fphoto%2FZZ5EGyuUCp9hBPk6_s4Ehg%3D%3D%2F5727171351132208489.jpg");
+                newsMessage.setArticleCount(1);
+                List<Article> articleList = new ArrayList<>();
+                articleList.add(article);
+                newsMessage.setArticles(articleList);
+                respMessage = MessageUtil.newsMessageToXml(newsMessage);
             }
             // 事件推送
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {
